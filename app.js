@@ -1142,21 +1142,48 @@ function selectTool(toolKey) {
 
     // 샌드박스 아이프레임 로드
     const iframe = document.getElementById('sandboxIframe');
-    iframe.srcdoc = metadata.code;
+    if (iframe) {
+        iframe.srcdoc = metadata.code;
+    }
+
+    // 프롬프트 실시간 미리보기 및 하단 타이틀 업데이트
+    const promptPreviewTitle = document.getElementById('promptPreviewTitle');
+    if (promptPreviewTitle) {
+        promptPreviewTitle.textContent = `${metadata.title.replace(' 미리보기', '')} 제미나이 프롬프트 원본`;
+    }
+
+    const promptPreviewText = document.getElementById('promptPreviewText');
+    if (promptPreviewText) {
+        promptPreviewText.textContent = metadata.prompt;
+    }
 
     // 복사 버튼 이벤트 연동
-    document.getElementById('btnCopyPrompt').onclick = () => {
-        copyToClipboard(metadata.prompt, "제미나이 실습용 프롬프트가 복사되었습니다!");
-    };
+    const btnCopyPrompt = document.getElementById('btnCopyPrompt');
+    if (btnCopyPrompt) {
+        btnCopyPrompt.onclick = () => {
+            copyToClipboard(metadata.prompt, "제미나이 실습용 프롬프트가 복사되었습니다!");
+        };
+    }
 
-    document.getElementById('btnCopyCode').onclick = () => {
-        copyToClipboard(metadata.code, "완성형 HTML 소스코드가 복사되었습니다!");
-    };
+    const btnCopyPromptBottom = document.getElementById('btnCopyPromptBottom');
+    if (btnCopyPromptBottom) {
+        btnCopyPromptBottom.onclick = () => {
+            copyToClipboard(metadata.prompt, "제미나이 실습용 프롬프트가 복사되었습니다!");
+        };
+    }
+
+    const btnCopyCode = document.getElementById('btnCopyCode');
+    if (btnCopyCode) {
+        btnCopyCode.onclick = () => {
+            copyToClipboard(metadata.code, "완성형 HTML 소스코드가 복사되었습니다!");
+        };
+    }
 }
 
 // 클립보드 복사 유틸리티
 function copyToClipboard(text, successMessage) {
     const hiddenTextarea = document.getElementById('hiddenCopyTextarea');
+    if (!hiddenTextarea) return;
     hiddenTextarea.value = text;
     hiddenTextarea.select();
     
@@ -1176,6 +1203,7 @@ function copyToClipboard(text, successMessage) {
 function showToast(message) {
     const toast = document.getElementById('toastBox');
     const toastMsg = document.getElementById('toastMessage');
+    if (!toast || !toastMsg) return;
     
     toastMsg.textContent = message;
     toast.classList.add('show');
@@ -1187,6 +1215,13 @@ function showToast(message) {
 
 // 초기화 호출
 window.addEventListener('load', () => {
-    initSlideDots();
-    updateSlideView();
+    if (document.getElementById('slideDots')) {
+        initSlideDots();
+        updateSlideView();
+    }
+    // 워크벤치 페이지 진입 시 1. 자리배치도 자동 초기화
+    if (document.getElementById('sandboxIframe')) {
+        selectTool('seat');
+    }
 });
+

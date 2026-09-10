@@ -90,6 +90,62 @@
             </div>
 
         </div>
+
+        <!-- 프롬프트 실시간 미리보기 및 구조 해설 영역 -->
+        <div class="prompt-section-container" style="margin-top: 30px; width: 100%;">
+            <!-- 프롬프트 미리보기 카드 -->
+            <div class="workbench-card" style="margin-bottom: 25px; padding: 25px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+                    <div>
+                        <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 8px;">
+                            📜 <span id="promptPreviewTitle">1. 자리 배치도 생성기 제미나이 프롬프트 원본</span>
+                        </h3>
+                        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 4px;">
+                            제미나이에 복사해서 그대로 붙여넣는 명령어 전문입니다. 필요시 자유롭게 읽고 참고할 수 있습니다.
+                        </p>
+                    </div>
+                    <button class="action-btn btn-prompt" id="btnCopyPromptBottom" style="width: auto; padding: 10px 20px; font-size: 0.85rem;">
+                        📋 프롬프트 복사
+                    </button>
+                </div>
+                <div class="prompt-preview-box" id="promptPreviewText">
+                    <!-- JavaScript로 선택된 도구의 프롬프트 전문이 삽입됩니다 -->
+                </div>
+            </div>
+
+            <!-- 프롬프트 구조 해설 4대 카드 -->
+            <div class="workbench-card" style="padding: 25px;">
+                <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+                    🔍 바이브 코딩 4대 프롬프트 작성 공식 (구조 해설)
+                </h3>
+                <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 15px;">
+                    제미나이가 코딩 에러 없이 교실에서 사용할 수 있는 완성형 단일 HTML 웹 앱을 만들어내는 필수 프롬프트 구조입니다.
+                </p>
+
+                <div class="prompt-structure-grid">
+                    <div class="p-struct-card">
+                        <div class="p-struct-tag tag-blue">1. 목표 및 환경 제약</div>
+                        <h4>📦 단일 파일 (Single-File) 강제</h4>
+                        <p>HTML, CSS, JS를 단 하나의 파일로 묶고 더블클릭만으로 실행 가능한 오프라인 환경임을 명시합니다.</p>
+                    </div>
+                    <div class="p-struct-card">
+                        <div class="p-struct-tag tag-purple">2. 디자인 및 레이아웃</div>
+                        <h4>🎨 교실 모니터 최적화 UI</h4>
+                        <p>글래스모피즘, 파스텔톤, 칠판 프레임 등 구체적인 visual 주제와 반응형 레이아웃 테마를 지시합니다.</p>
+                    </div>
+                    <div class="p-struct-card">
+                        <div class="p-struct-tag tag-pink">3. 핵심 동작 규칙</div>
+                        <h4>⚡ 사용자 경험 & 오프라인 기술</h4>
+                        <p>드래그앤드롭 자리 교환, 브라우저 내장 TTS 음성, Canvas 폭죽 등 독립 작동 로직을 세부 요구합니다.</p>
+                    </div>
+                    <div class="p-struct-card">
+                        <div class="p-struct-tag tag-green">4. 데이터 영속성</div>
+                        <h4>💾 localStorage 데이터 저장</h4>
+                        <p>학생 명단이나 학급 설정이 새로고침이나 브라우저 재시작 후에도 자동 보존되도록 지시합니다.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- 복사 영역 히든 컨테이너 -->
