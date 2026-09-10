@@ -1120,10 +1120,23 @@ a.nav-tab {
     margin-bottom: 6px;
 }
 
-.p-struct-card p {
-    font-size: 0.82rem;
+/* ================== H. 공통 푸터 & 저작권 표시 스타일 ================== */
+footer.global-footer {
+    text-align: center;
+    padding: 25px 20px;
+    margin-top: 40px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(10, 13, 26, 0.6);
     color: var(--text-secondary);
-    line-height: 1.5;
+    font-size: 0.88rem;
+    line-height: 1.6;
 }
+
+footer.global-footer .copyright-brand {
+    color: var(--text-primary);
+    font-weight: 700;
+    letter-spacing: -0.2px;
+}
+
 
 
