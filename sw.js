@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vibe-coding-kit-v2';
+const CACHE_NAME = 'vibe-coding-kit-v3';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',

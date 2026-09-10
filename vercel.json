@@ -1,7 +1,7 @@
 {
   "version": 2,
   "name": "vibe-coding-teacher-portal",
-  "cleanUrls": true,
+  "cleanUrls": false,
   "trailingSlash": false,
   "headers": [
     {
