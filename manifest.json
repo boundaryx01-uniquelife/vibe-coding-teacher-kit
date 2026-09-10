@@ -1,0 +1,25 @@
+{
+  "name": "바이브 코딩 학급운영 연수 Kit",
+  "short_name": "바이브코딩Kit",
+  "description": "AI 플랫폼 활용 바이브 코딩으로 만드는 학급운영 프로그램 연수 포털",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0a0d1a",
+  "theme_color": "#8b5cf6",
+  "icons": [
+    {
+      "src": "./images/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./images/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

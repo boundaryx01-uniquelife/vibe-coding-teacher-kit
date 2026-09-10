@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>초보 가이드북 - 바이브 코딩 학급운영 Kit</title>
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#8b5cf6">
+    <link rel="apple-touch-icon" href="./images/icon-192.png">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <!-- 공통 상단 네비게이션 헤더 -->
+    <header>
+        <div class="logo">
+            <a href="./index.html" style="text-decoration:none; display:flex; align-items:center; gap:10px;">
+                <div class="logo-icon">🚀</div>
+                <h1>바이브 코딩 학급운영 연수 Kit</h1>
+            </a>
+        </div>
+        <nav>
+            <a href="./index.html" class="nav-tab">🏠 홈</a>
+            <a href="./slides.html" class="nav-tab">📺 연수 슬라이드</a>
+            <a href="./workbench.html" class="nav-tab">🛠️ 실습 워크벤치</a>
+            <a href="./playbook.html" class="nav-tab active">📖 초보 가이드북</a>
+            <a href="./handout.html" class="nav-tab">🖨️ 인쇄용 유인물</a>
+        </nav>
+    </header>
+
+    <div class="main-wrapper" style="grid-template-columns: 1fr; padding-top: 10px;">
+        <div class="guide-container">
+            
+            <!-- 1단계: 실행법 가이드 -->
+            <div class="guide-card">
+                <h2>🚀 생초보도 5분 만에 만드는 웹 프로그램 실행법</h2>
+                <div class="steps-list">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3>제미나이 프롬프트 입력 및 전송</h3>
+                            <p><a href="./workbench.html" style="color:var(--color-accent-cyan); font-weight:bold;">실습 워크벤치</a> 탭에서 원하는 프로그램의 <strong>[제미나이 프롬프트 복사]</strong> 버튼을 누른 후, 제미나이 채팅창에 붙여넣고 입력합니다.</p>
+                        </div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3>코드 블록 전체 복사</h3>
+                            <p>제미나이가 짜준 HTML 코드를 복사합니다. 코드 블록 우측 상단의 '복사' 또는 'Copy' 아이콘을 클릭하면 깔끔하게 원본 코드가 복사됩니다.</p>
+                        </div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3>메모장에 코드 붙여넣기 및 저장</h3>
+                            <p>윈도우 메모장(Notepad)을 실행하고 코드를 붙여넣습니다.<br>
+                            <strong>[파일] -> [다른 이름으로 저장]</strong>을 선택하고, 파일명을 <code>seat_arranger.html</code> 형태로 적습니다. <strong>반드시 파일 형식을 '모든 파일(*.*)'로 설정</strong>하고, 인코딩 형식을 <strong>'UTF-8'</strong>로 지정한 뒤 저장해 주세요.</p>
+                        </div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h3>더블클릭하여 브라우저에서 실행</h3>
+                            <p>저장된 파일을 마우스로 더블클릭하면 교실 크롬(Chrome)이나 엣지(Edge) 브라우저에서 인터넷 연결 없이도 즉각 실행되는 독립적인 프로그램이 가동됩니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2단계: 문제 해결 Q&A -->
+            <div class="guide-card">
+                <h2>⚠️ 흔히 겪는 에러 및 해결 방법 (FAQ)</h2>
+                <div class="trouble-grid">
+                    <div class="trouble-card">
+                        <h3>❌ 한글이 이상한 문자로 깨져서 나와요</h3>
+                        <p><strong>이유:</strong> 메모장에서 저장할 때 인코딩 방식을 지정하지 않아서 생기는 한국어 깨짐 현상입니다.<br>
+                        <strong>해결책:</strong> 파일을 저장할 때 하단의 인코딩 방식을 <strong>'ANSI'가 아닌 'UTF-8'</strong>로 선택해 주시면 완벽히 해결됩니다.</p>
+                    </div>
+                    <div class="trouble-card solve">
+                        <h3>💡 내가 원하는 새로운 기능(소리 등)을 넣고 싶어요</h3>
+                        <p><strong>방법:</strong> 제미나이에게 추가 대화를 건네어 코드를 개선해 보세요.<br>
+                        <em>"방금 짜준 코드에서 버튼을 누르면 귀여운 당첨 효과음이 나오도록 사운드 생성(Web Audio API) 코드를 추가해줘"</em> 라고 말하면 다시 코드를 줍니다.</p>
+                    </div>
+                    <div class="trouble-card">
+                        <h3>❌ 브라우저를 껐다 켜면 학생 명단이 다 사라져요</h3>
+                        <p><strong>이유:</strong> 임시로 명단을 메모리상에만 들고 있어서 초기화되는 현상입니다.<br>
+                        <strong>해결책:</strong> <em>"브라우저 로컬 스토리지(localStorage)에 학생 명단을 저장하게 고쳐줘. 그래서 껐다 켜도 자동으로 불러와지게 해줘."</em> 라고 말하세요.</p>
+                    </div>
+                    <div class="trouble-card solve">
+                        <h3>💡 프로그램 아이디어가 없을 땐 어떡하죠?</h3>
+                        <p><strong>방법:</strong> 제미나이에게 교실 내 고민을 털어놓으세요.<br>
+                        <em>"나는 초등학교 교사야. 학급 운영을 하면서 학생들이 1인 1역 청소를 제대로 수행했는지 기록하고 체크하는 예쁜 웹 대시보드를 만들고 싶어. 단일 파일 HTML로 구현할 수 있는 상세한 기획과 소스코드를 작성해줘."</em></p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="./app.js"></script>
+</body>
+</html>

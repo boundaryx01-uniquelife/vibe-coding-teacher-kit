@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오늘의 학급 안내판 & 타이머</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --primary: #38bdf8;
+            --primary-glow: rgba(56, 189, 248, 0.4);
+            --accent: #34d399;
+            --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .light-theme {
+            --bg-color: #f1f5f9;
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --border-color: rgba(0, 0, 0, 0.06);
+            --text-color: #0f172a;
+            --text-muted: #475569;
+            --primary: #0284c7;
+            --primary-glow: rgba(2, 132, 199, 0.2);
+            --accent: #16a34a;
+            --shadow: 0 8px 32px 0 rgba(148, 163, 184, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-title h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .theme-toggle {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            box-shadow: var(--shadow);
+        }
+
+        /* 대시보드 그리드 */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 20px;
+            flex: 1;
+        }
+
+        @media (max-width: 900px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        /* 1. 집중 타이머 위젯 */
+        .timer-widget {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 0;
+        }
+
+        .digital-clock {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent);
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .timer-display {
+            font-size: 4.5rem;
+            font-weight: 800;
+            font-family: monospace;
+            margin: 10px 0;
+            text-shadow: 0 0 15px var(--primary-glow);
+            letter-spacing: -2px;
+        }
+
+        .timer-controls {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            max-width: 300px;
+            margin-bottom: 15px;
+        }
+
+        .timer-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .timer-btn.btn-stop {
+            background-color: #ef4444;
+        }
+
+        .timer-btn.btn-reset {
+            background-color: #64748b;
+        }
+
+        .timer-presets {
+            display: flex;
+            gap: 8px;
+        }
+
+        .preset-btn {
+            padding: 6px 12px;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .preset-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* 2. 시간표 위젯 */
+        .timetable-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+
+        .timetable-table th, .timetable-table td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .timetable-table th {
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .timetable-table td input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: var(--text-color);
+            text-align: center;
+            font-weight: bold;
+            font-size: 0.95rem;
+            outline: none;
+            border-radius: 4px;
+            padding: 4px;
+        }
+
+        .timetable-table td input:focus {
+            background: rgba(56, 189, 248, 0.1);
+        }
+
+        /* 3. 알림장 위젯 */
+        .notice-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .notice-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .notice-checkbox {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .notice-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-color);
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .notice-input:focus {
+            border-bottom: 1px solid var(--primary);
+        }
+
+        /* 4. 급식/1인1역 위젯 */
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .info-block {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px;
+        }
+
+        .info-block h4 {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .info-block textarea {
+            width: 100%;
+            height: 60px;
+            background: transparent;
+            border: none;
+            color: var(--text-color);
+            resize: none;
+            outline: none;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .info-block textarea:focus {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-title">
+            <h1 id="titleText">📅 오늘의 우리 반 안내판</h1>
+        </div>
+        <button class="theme-toggle" id="btnThemeToggle">☀️ 라이트 모드</button>
+    </header>
+
+    <div class="dashboard-grid">
+        <!-- 왼쪽 열: 시계/타이머 & 시간표 -->
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+            <!-- 시계 & 타이머 카드 -->
+            <div class="card">
+                <div class="card-title">🕒 실시간 집중 타이머</div>
+                <div class="timer-widget">
+                    <div class="digital-clock" id="currentClock">12:00:00 PM</div>
+                    <div class="timer-display" id="timerDisplay">20:00</div>
+                    <div class="timer-controls">
+                        <button class="timer-btn" id="btnTimerStart">시작</button>
+                        <button class="timer-btn btn-stop" id="btnTimerStop" style="display:none;">정지</button>
+                        <button class="timer-btn btn-reset" id="btnTimerReset">리셋</button>
+                    </div>
+                    <div class="timer-presets">
+                        <button class="preset-btn" data-time="300">5분</button>
+                        <button class="preset-btn" data-time="600">10분</button>
+                        <button class="preset-btn" data-time="1200">20분</button>
+                        <button class="preset-btn" data-time="1800">30분</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 시간표 카드 -->
+            <div class="card">
+                <div class="card-title">📚 오늘의 시간표</div>
+                <table class="timetable-table">
+                    <thead>
+                        <tr>
+                            <th style="width:20%;">교시</th>
+                            <th style="width:50%;">교과명</th>
+                            <th style="width:30%;">준비물</th>
+                        </tr>
+                    </thead>
+                    <tbody id="timetableBody">
+                        <!-- 시간표가 스크립트로 구성됩니다 -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 오른쪽 열: 알림장 & 급식/청소 -->
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+            <!-- 알림장 카드 -->
+            <div class="card" style="flex: 1;">
+                <div class="card-title">📝 오늘의 알림장 (체크리스트)</div>
+                <ul class="notice-list" id="noticeList">
+                    <!-- 알림장 항목이 동적으로 생성됩니다 -->
+                </ul>
+                <button id="btnAddNotice" class="preset-btn" style="margin-top: 15px; width: auto; align-self: flex-start; padding: 6px 15px;">+ 알림 추가</button>
+            </div>
+
+            <!-- 청소 및 급식 정보 카드 -->
+            <div class="card">
+                <div class="card-title">💡 학급 정보판</div>
+                <div class="info-grid">
+                    <div class="info-block">
+                        <h4>🧹 오늘의 청소 구역 <span style="font-size:0.75rem;">* 실시간 자동 저장</span></h4>
+                        <textarea id="cleaningInput" placeholder="1모둠: 교실 앞쪽 / 2모둠: 뒤쪽 / 3모둠: 복도..."></textarea>
+                    </div>
+                    <div class="info-block">
+                        <h4>🍴 오늘의 급식 메뉴 <span style="font-size:0.75rem;">* 실시간 자동 저장</span></h4>
+                        <textarea id="lunchInput" placeholder="잡곡밥, 육개장, 닭갈비, 시금치나물, 깍두기, 멜론"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 테마 및 스토리지 키 설정
+        const STORAGE_KEY = 'vibe_board_data';
+        const body = document.body;
+        const btnThemeToggle = document.getElementById('btnThemeToggle');
+        
+        // 데이터 상태 객체
+        let boardState = {
+            lightTheme: false,
+            timetable: [
+                { period: "1", subject: "국어", prep: "교과서, 배움공책" },
+                { period: "2", subject: "수학", prep: "수학책, 익힘책, 자" },
+                { period: "3", subject: "체육", prep: "운동복, 운동화" },
+                { period: "4", subject: "과학", prep: "실험관찰" },
+                { period: "5", subject: "사회", prep: "사회과 부도" },
+                { period: "6", subject: "미술", prep: "스케치북, 색연필" }
+            ],
+            notices: [
+                { text: "독서록 1편 작성하여 내일까지 제출하기", checked: false },
+                { text: "내일 체육 수업을 위해 체육복 입고 오기", checked: false },
+                { text: "개인 물통 가져오기", checked: false }
+            ],
+            cleaning: "1모둠: 교실 쓸기 / 2모둠: 칠판 및 창틀 / 3모둠: 책상 정돈 / 4모둠: 재활용 쓰레기",
+            lunch: "보리밥, 감자수제비국, 돈육갈비찜, 숙주나물무침, 포기김치, 사과"
+        };
+
+        // 로드 시 초기화
+        window.addEventListener('load', () => {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                boardState = JSON.parse(saved);
+            }
+
+            // 테마 적용
+            if (boardState.lightTheme) {
+                body.classList.add('light-theme');
+                btnThemeToggle.textContent = "🌙 다크 모드";
+            }
+
+            renderTimetable();
+            renderNotices();
+            
+            document.getElementById('cleaningInput').value = boardState.cleaning || "";
+            document.getElementById('lunchInput').value = boardState.lunch || "";
+
+            // 시계 시작
+            setInterval(updateClock, 1000);
+            updateClock();
+        });
+
+        // 테마 변경 토글
+        btnThemeToggle.addEventListener('click', () => {
+            body.classList.toggle('light-theme');
+            boardState.lightTheme = body.classList.contains('light-theme');
+            btnThemeToggle.textContent = boardState.lightTheme ? "🌙 다크 모드" : "☀️ 라이트 모드";
+            saveState();
+        });
+
+        // 실시간 시계 업데이트
+        function updateClock() {
+            const now = new Date();
+            let hours = now.getHours();
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12; // 0시 -> 12시 표시
+            
+            document.getElementById('currentClock').textContent = 
+                `${hours}:${minutes}:${seconds} ${ampm}`;
+        }
+
+        // 상태 로컬 저장
+        function saveState() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(boardState));
+        }
+
+        // 시간표 렌더링
+        function renderTimetable() {
+            const tbody = document.getElementById('timetableBody');
+            tbody.innerHTML = "";
+
+            boardState.timetable.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                
+                // 교시 열
+                const tdPeriod = document.createElement('td');
+                tdPeriod.textContent = `${item.period}교시`;
+                tr.appendChild(tdPeriod);
+
+                // 과목 열
+                const tdSubject = document.createElement('td');
+                const inputSubj = document.createElement('input');
+                inputSubj.value = item.subject;
+                inputSubj.addEventListener('input', (e) => {
+                    boardState.timetable[index].subject = e.target.value;
+                    saveState();
+                });
+                tdSubject.appendChild(inputSubj);
+                tr.appendChild(tdSubject);
+
+                // 준비물 열
+                const tdPrep = document.createElement('td');
+                const inputPrep = document.createElement('input');
+                inputPrep.value = item.prep;
+                inputPrep.addEventListener('input', (e) => {
+                    boardState.timetable[index].prep = e.target.value;
+                    saveState();
+                });
+                tdPrep.appendChild(inputPrep);
+                tr.appendChild(tdPrep);
+
+                tbody.appendChild(tr);
+            });
+        }
+
+        // 알림장 렌더링
+        function renderNotices() {
+            const list = document.getElementById('noticeList');
+            list.innerHTML = "";
+
+            boardState.notices.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.classList.add('notice-item');
+
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.classList.add('notice-checkbox');
+                checkbox.checked = item.checked;
+                checkbox.addEventListener('change', (e) => {
+                    boardState.notices[index].checked = e.target.checked;
+                    saveState();
+                });
+                li.appendChild(checkbox);
+
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.classList.add('notice-input');
+                input.value = item.text;
+                input.addEventListener('input', (e) => {
+                    boardState.notices[index].text = e.target.value;
+                    saveState();
+                });
+                li.appendChild(input);
+
+                // 삭제 버튼
+                const delBtn = document.createElement('span');
+                delBtn.textContent = "❌";
+                delBtn.style.cursor = "pointer";
+                delBtn.style.fontSize = "0.8rem";
+                delBtn.addEventListener('click', () => {
+                    boardState.notices.splice(index, 1);
+                    renderNotices();
+                    saveState();
+                });
+                li.appendChild(delBtn);
+
+                list.appendChild(li);
+            });
+        }
+
+        // 알림 추가 버튼
+        document.getElementById('btnAddNotice').addEventListener('click', () => {
+            boardState.notices.push({ text: "새 알림장 내용을 적으세요", checked: false });
+            renderNotices();
+            saveState();
+        });
+
+        // 텍스트 영역 변경 이벤트
+        document.getElementById('cleaningInput').addEventListener('input', (e) => {
+            boardState.cleaning = e.target.value;
+            saveState();
+        });
+
+        document.getElementById('lunchInput').addEventListener('input', (e) => {
+            boardState.lunch = e.target.value;
+            saveState();
+        });
+
+        // ================= 집중 타이머 제어 =================
+        let timerSeconds = 1200; // 기본 20분
+        let timerInterval = null;
+
+        const timerDisplay = document.getElementById('timerDisplay');
+        const btnTimerStart = document.getElementById('btnTimerStart');
+        const btnTimerStop = document.getElementById('btnTimerStop');
+        const btnTimerReset = document.getElementById('btnTimerReset');
+
+        function updateTimerDisplay() {
+            const minutes = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
+            const seconds = String(timerSeconds % 60).padStart(2, '0');
+            timerDisplay.textContent = `${minutes}:${seconds}`;
+        }
+
+        btnTimerStart.addEventListener('click', () => {
+            if (timerInterval) return;
+            
+            btnTimerStart.style.display = 'none';
+            btnTimerStop.style.display = 'block';
+
+            timerInterval = setInterval(() => {
+                if (timerSeconds > 0) {
+                    timerSeconds--;
+                    updateTimerDisplay();
+                } else {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                    btnTimerStart.style.display = 'block';
+                    btnTimerStop.style.display = 'none';
+                    triggerTimerAlert();
+                }
+            }, 1000);
+        });
+
+        btnTimerStop.addEventListener('click', () => {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            btnTimerStart.style.display = 'block';
+            btnTimerStop.style.display = 'none';
+        });
+
+        btnTimerReset.addEventListener('click', () => {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            btnTimerStart.style.display = 'block';
+            btnTimerStop.style.display = 'none';
+            timerSeconds = 1200; // 20분 리셋
+            updateTimerDisplay();
+        });
+
+        // 프리셋 버튼
+        document.querySelectorAll('.preset-btn[data-time]').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                clearInterval(timerInterval);
+                timerInterval = null;
+                btnTimerStart.style.display = 'block';
+                btnTimerStop.style.display = 'none';
+                timerSeconds = parseInt(e.target.dataset.time);
+                updateTimerDisplay();
+            });
+        });
+
+        // 타이머 완료 알림 (소리 비프음 발생 & TTS)
+        function triggerTimerAlert() {
+            try {
+                // 비프음 울리기
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(880, audioCtx.currentTime); // A5 note
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 1.0); // 1초 뒤 종료
+                
+                // 음성 안내
+                if ('speechSynthesis' in window) {
+                    setTimeout(() => {
+                        const utterance = new SpeechSynthesisUtterance("집중 시간이 끝났습니다. 마무리해 주세요.");
+                        utterance.lang = 'ko-KR';
+                        window.speechSynthesis.speak(utterance);
+                    }, 1100);
+                }
+            } catch(e) {}
+            
+            // 시각적 강조
+            timerDisplay.style.color = '#ef4444';
+            setTimeout(() => {
+                timerDisplay.style.color = '';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

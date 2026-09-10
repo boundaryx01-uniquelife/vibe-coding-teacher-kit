@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>실습 워크벤치 - 바이브 코딩 학급운영 Kit</title>
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#8b5cf6">
+    <link rel="apple-touch-icon" href="./images/icon-192.png">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <!-- 공통 상단 네비게이션 헤더 -->
+    <header>
+        <div class="logo">
+            <a href="./index.html" style="text-decoration:none; display:flex; align-items:center; gap:10px;">
+                <div class="logo-icon">🚀</div>
+                <h1>바이브 코딩 학급운영 연수 Kit</h1>
+            </a>
+        </div>
+        <nav>
+            <a href="./index.html" class="nav-tab">🏠 홈</a>
+            <a href="./slides.html" class="nav-tab">📺 연수 슬라이드</a>
+            <a href="./workbench.html" class="nav-tab active">🛠️ 실습 워크벤치</a>
+            <a href="./playbook.html" class="nav-tab">📖 초보 가이드북</a>
+            <a href="./handout.html" class="nav-tab">🖨️ 인쇄용 유인물</a>
+        </nav>
+    </header>
+
+    <div class="main-wrapper" style="grid-template-columns: 1fr; padding-top: 10px;">
+        <div class="workbench-grid">
+            
+            <!-- 왼쪽 도구 선택 및 프롬프트 제공 카드 -->
+            <div class="workbench-sidebar">
+                <div class="tool-info-header">
+                    <h3 class="tool-info-title">🛠️ 실습 도구 선택</h3>
+                    <p class="tool-info-desc">원하는 도구를 고르고 제미나이용 프롬프트를 복사하세요.</p>
+                </div>
+
+                <button class="tool-selector-btn active" onclick="selectTool('seat')">
+                    <span class="tool-selector-icon">🪑</span>
+                    <div style="display:flex; flex-direction:column;">
+                        <span style="font-weight:bold; color:var(--text-primary);">1. 자리 배치도 생성기</span>
+                        <span style="font-size:0.75rem; color:var(--text-secondary);">드래그 앤 드롭 자리 바꾸기</span>
+                    </div>
+                </button>
+
+                <button class="tool-selector-btn" onclick="selectTool('roulette')">
+                    <span class="tool-selector-icon">🎉</span>
+                    <div style="display:flex; flex-direction:column;">
+                        <span style="font-weight:bold; color:var(--text-primary);">2. 모둠 & 룰렛 추첨기</span>
+                        <span style="font-size:0.75rem; color:var(--text-secondary);">모둠 생성 및 TTS 룰렛 기능</span>
+                    </div>
+                </button>
+
+                <button class="tool-selector-btn" onclick="selectTool('board')">
+                    <span class="tool-selector-icon">📅</span>
+                    <div style="display:flex; flex-direction:column;">
+                        <span style="font-weight:bold; color:var(--text-primary);">3. 학급 안내판 & 타이머</span>
+                        <span style="font-size:0.75rem; color:var(--text-secondary);">뽀모도로 타이머 & 안내 대시보드</span>
+                    </div>
+                </button>
+
+                <!-- 복사 및 팁 상자 -->
+                <div class="workbench-card" style="padding:15px; margin-top:10px; border-style:dashed;">
+                    <div class="control-group">
+                        <button class="action-btn btn-prompt" id="btnCopyPrompt">📋 제미나이 프롬프트 복사</button>
+                        <button class="action-btn btn-code" id="btnCopyCode">💾 완성형 HTML 코드 복사</button>
+                    </div>
+                    <div class="tool-tips" id="toolTipsBox">
+                        <h4>💡 바이브 꿀팁</h4>
+                        <p id="toolTipContent">기본 자리 배치도 프롬프트 팁입니다.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 오른쪽 실시간 샌드박스 (iframe 미리보기) -->
+            <div class="workbench-card sandbox-card">
+                <div class="sandbox-header">
+                    <div class="sandbox-status">
+                        <span class="status-dot"></span>
+                        <span id="sandboxTitle">자리 배치도 생성기 미리보기</span>
+                    </div>
+                    <div style="font-size:0.75rem; color:var(--text-secondary);">
+                        * 실제 단일 파일 HTML 코드가 작동되는 모습입니다.
+                    </div>
+                </div>
+                <iframe id="sandboxIframe" class="sandbox-iframe"></iframe>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 복사 영역 히든 컨테이너 -->
+    <textarea id="hiddenCopyTextarea" class="copy-area"></textarea>
+
+    <!-- 성공 알림 팝업 토스트 -->
+    <div class="toast" id="toastBox">
+        <span id="toastIcon">✨</span> <span id="toastMessage">클립보드에 복사 완료!</span>
+    </div>
+
+    <script src="./app.js"></script>
+</body>
+</html>

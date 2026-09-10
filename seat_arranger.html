@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>우당탕탕 학급 자리 배치도</title>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --background: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        header {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        .sidebar, .main-content {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        input[type="number"], textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="number"]:focus, textarea:focus {
+            border-color: var(--primary);
+        }
+
+        textarea {
+            height: 180px;
+            resize: vertical;
+        }
+
+        .grid-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            margin-bottom: 10px;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background-color: #e2e8f0;
+            color: #475569;
+        }
+
+        .btn-secondary:hover {
+            background-color: #cbd5e1;
+        }
+
+        .blackboard {
+            background: #1e293b;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-weight: bold;
+            border-radius: 6px;
+            margin-bottom: 25px;
+            border: 4px solid #854d0e; /* Wood frame border */
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+        }
+
+        .seat-grid {
+            display: grid;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .seat {
+            background: #f1f5f9;
+            border: 2px dashed #cbd5e1;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 70px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: move;
+            transition: all 0.2s;
+            user-select: none;
+            position: relative;
+        }
+
+        .seat.occupied {
+            background: #e0e7ff;
+            border: 2px solid #a5b4fc;
+            color: #312e81;
+            box-shadow: 0 2px 4px rgba(99, 102, 241, 0.05);
+        }
+
+        .seat.occupied:hover {
+            border-color: var(--primary);
+            background: #eceeff;
+            transform: translateY(-2px);
+        }
+
+        .seat-num {
+            position: absolute;
+            top: 4px;
+            left: 6px;
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            font-weight: normal;
+        }
+
+        .drag-over {
+            border: 2px dashed var(--primary) !important;
+            background: #e0e7ff !important;
+            transform: scale(1.05);
+        }
+
+        .legend {
+            display: flex;
+            gap: 15px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🪑 오늘의 우리 반 자리 배치도</h1>
+        <p>인원과 학생 이름을 입력하고 자리를 배치해 보세요. 드래그해서 자리를 바꿀 수 있습니다.</p>
+    </header>
+
+    <div class="container">
+        <!-- 설정 영역 -->
+        <div class="sidebar">
+            <div class="form-group">
+                <label>교실 크기 설정</label>
+                <div class="grid-inputs">
+                    <div>
+                        <label for="rows" style="font-size: 0.75rem; margin-top: 2px;">가로 줄 (행)</label>
+                        <input type="number" id="rows" value="5" min="1" max="10">
+                    </div>
+                    <div>
+                        <label for="cols" style="font-size: 0.75rem; margin-top: 2px;">세로 줄 (열)</label>
+                        <input type="number" id="cols" value="6" min="1" max="10">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="studentList">학생 명단 입력 (줄바꿈 또는 쉼표 구분)</label>
+                <textarea id="studentList" placeholder="김철수&#10;이영희&#10;박민수&#10;최수지&#10;..."></textarea>
+            </div>
+
+            <button id="btnArrange">🎲 무작위 자리 배치</button>
+            <button id="btnReset" class="btn-secondary">🗑️ 전체 초기화</button>
+        </div>
+
+        <!-- 배치도 영역 -->
+        <div class="main-content">
+            <div class="blackboard">칠 판 (교탁 방향)</div>
+            <div id="seatGrid" class="seat-grid">
+                <!-- 자리가 동적으로 생성됩니다 -->
+            </div>
+            
+            <div class="legend">
+                <div class="legend-item">
+                    <span class="legend-color" style="background: #e0e7ff; border: 1px solid #a5b4fc;"></span>
+                    <span>배치된 자리</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color" style="background: #f1f5f9; border: 1px dashed #cbd5e1;"></span>
+                    <span>빈 자리</span>
+                </div>
+                <div class="legend-item">
+                    <span>💡 마우스로 카드를 드래그하여 자리를 교환할 수 있습니다.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 로컬 스토리지 키
+        const STORAGE_KEY = 'vibe_seat_students';
+        const STORAGE_GRID = 'vibe_seat_grid';
+
+        // DOM 요소
+        const rowsInput = document.getElementById('rows');
+        const colsInput = document.getElementById('cols');
+        const studentListText = document.getElementById('studentList');
+        const btnArrange = document.getElementById('btnArrange');
+        const btnReset = document.getElementById('btnReset');
+        const seatGrid = document.getElementById('seatGrid');
+
+        // 상태 변수
+        let students = [];
+        let seatAssignments = []; // 1차원 배열로 각 자리의 학생 매핑
+
+        // 페이지 로드 시 기존 데이터 불러오기
+        window.addEventListener('load', () => {
+            const savedStudents = localStorage.getItem(STORAGE_KEY);
+            const savedGrid = localStorage.getItem(STORAGE_GRID);
+
+            if (savedStudents) {
+                studentListText.value = savedStudents;
+            } else {
+                // 기본 예시 데이터
+                studentListText.value = "강민준, 고은아, 김도현, 김민지, 김서연, 김우빈, 김지아, 김현우, 박서준, 박소율, 박예준, 박지민, 배수아, 서지훈, 신민서, 오지민, 유재석, 윤도현, 이서윤, 이준우, 이지아, 이채원, 장우진, 정민서, 조은우, 최서준, 최아윤, 한지민, 황민우";
+            }
+
+            if (savedGrid) {
+                const gridData = JSON.parse(savedGrid);
+                rowsInput.value = gridData.rows || 5;
+                colsInput.value = gridData.cols || 6;
+                seatAssignments = gridData.assignments || [];
+                renderGrid();
+            } else {
+                generateEmptyGrid();
+            }
+        });
+
+        // 입력 값 변경 시 빈 그리드 생성
+        rowsInput.addEventListener('change', generateEmptyGrid);
+        colsInput.addEventListener('change', generateEmptyGrid);
+
+        // 학생 명단 파싱 함수
+        function parseStudents() {
+            const rawText = studentListText.value;
+            localStorage.setItem(STORAGE_KEY, rawText); // 입력내용 실시간 저장
+            return rawText.split(/[\n,]+/)
+                .map(name => name.trim())
+                .filter(name => name.length > 0);
+        }
+
+        // 빈 그리드 초기 생성
+        function generateEmptyGrid() {
+            const rows = parseInt(rowsInput.value) || 5;
+            const cols = parseInt(colsInput.value) || 6;
+            const totalSeats = rows * cols;
+            
+            seatAssignments = Array(totalSeats).fill("");
+            renderGrid();
+            saveGridState();
+        }
+
+        // 그리드 렌더링
+        function renderGrid() {
+            const rows = parseInt(rowsInput.value) || 5;
+            const cols = parseInt(colsInput.value) || 6;
+            
+            seatGrid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+            seatGrid.innerHTML = "";
+
+            seatAssignments.forEach((studentName, index) => {
+                const seatDiv = document.createElement('div');
+                seatDiv.classList.add('seat');
+                seatDiv.dataset.index = index;
+
+                // 자리 번호 표기 (행-열 스타일 또는 일련번호)
+                const rowNum = Math.floor(index / cols) + 1;
+                const colNum = (index % cols) + 1;
+                
+                const numSpan = document.createElement('span');
+                numSpan.classList.add('seat-num');
+                numSpan.textContent = `${rowNum}-${colNum}`;
+                seatDiv.appendChild(numSpan);
+
+                if (studentName) {
+                    seatDiv.classList.add('occupied');
+                    seatDiv.setAttribute('draggable', 'true');
+                    
+                    const nameSpan = document.createElement('span');
+                    nameSpan.textContent = studentName;
+                    seatDiv.appendChild(nameSpan);
+                } else {
+                    seatDiv.appendChild(document.createTextNode(""));
+                }
+
+                // 드래그 앤 드롭 이벤트 등록
+                setupDragAndDrop(seatDiv);
+
+                seatGrid.appendChild(seatDiv);
+            });
+        }
+
+        // 무작위 자리 배치 실행
+        btnArrange.addEventListener('click', () => {
+            students = parseStudents();
+            if (students.length === 0) {
+                alert("학생 이름을 먼저 입력해 주세요!");
+                return;
+            }
+
+            const rows = parseInt(rowsInput.value) || 5;
+            const cols = parseInt(colsInput.value) || 6;
+            const totalSeats = rows * cols;
+
+            if (students.length > totalSeats) {
+                alert(`학생 수(${students.length}명)가 교실 자리 수(${totalSeats}개)보다 많습니다. 교실 크기를 늘려주세요!`);
+                return;
+            }
+
+            // 학생 명단 랜덤 셔플
+            const shuffledStudents = [...students];
+            for (let i = shuffledStudents.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffledStudents[i], shuffledStudents[j]] = [shuffledStudents[j], shuffledStudents[i]];
+            }
+
+            // 자리 배열 초기화 후 학생 배치
+            seatAssignments = Array(totalSeats).fill("");
+            shuffledStudents.forEach((student, index) => {
+                seatAssignments[index] = student;
+            });
+
+            renderGrid();
+            saveGridState();
+        });
+
+        // 초기화 버튼
+        btnReset.addEventListener('click', () => {
+            if (confirm("자리와 명단을 모두 초기화하시겠습니까?")) {
+                studentListText.value = "";
+                localStorage.removeItem(STORAGE_KEY);
+                localStorage.removeItem(STORAGE_GRID);
+                generateEmptyGrid();
+            }
+        });
+
+        // 상태 저장 함수
+        function saveGridState() {
+            const gridData = {
+                rows: parseInt(rowsInput.value),
+                cols: parseInt(colsInput.value),
+                assignments: seatAssignments
+            };
+            localStorage.setItem(STORAGE_GRID, JSON.stringify(gridData));
+        }
+
+        // 드래그 앤 드롭 구현
+        let draggedElement = null;
+
+        function setupDragAndDrop(element) {
+            element.addEventListener('dragstart', (e) => {
+                if (!element.classList.contains('occupied')) {
+                    e.preventDefault();
+                    return;
+                }
+                draggedElement = element;
+                element.style.opacity = '0.5';
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/plain', element.dataset.index);
+            });
+
+            element.addEventListener('dragend', () => {
+                if (draggedElement) {
+                    draggedElement.style.opacity = '1';
+                }
+                document.querySelectorAll('.seat').forEach(s => s.classList.remove('drag-over'));
+                draggedElement = null;
+            });
+
+            element.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+                if (element !== draggedElement) {
+                    element.classList.add('drag-over');
+                }
+            });
+
+            element.addEventListener('dragleave', () => {
+                element.classList.remove('drag-over');
+            });
+
+            element.addEventListener('drop', (e) => {
+                e.preventDefault();
+                element.classList.remove('drag-over');
+                
+                const fromIndex = parseInt(e.dataTransfer.getData('text/plain'));
+                const toIndex = parseInt(element.dataset.index);
+
+                if (fromIndex === toIndex) return;
+
+                // 두 자리의 학생 이름 교환
+                const temp = seatAssignments[fromIndex];
+                seatAssignments[fromIndex] = seatAssignments[toIndex];
+                seatAssignments[toIndex] = temp;
+
+                renderGrid();
+                saveGridState();
+            });
+        }
+    </script>
+</body>
+</html>

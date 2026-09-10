@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>연수 슬라이드 - 바이브 코딩 학급운영 Kit</title>
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#8b5cf6">
+    <link rel="apple-touch-icon" href="./images/icon-192.png">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <!-- 공통 상단 네비게이션 헤더 -->
+    <header>
+        <div class="logo">
+            <a href="./index.html" style="text-decoration:none; display:flex; align-items:center; gap:10px;">
+                <div class="logo-icon">🚀</div>
+                <h1>바이브 코딩 학급운영 연수 Kit</h1>
+            </a>
+        </div>
+        <nav>
+            <a href="./index.html" class="nav-tab">🏠 홈</a>
+            <a href="./slides.html" class="nav-tab active">📺 연수 슬라이드</a>
+            <a href="./workbench.html" class="nav-tab">🛠️ 실습 워크벤치</a>
+            <a href="./playbook.html" class="nav-tab">📖 초보 가이드북</a>
+            <a href="./handout.html" class="nav-tab">🖨️ 인쇄용 유인물</a>
+        </nav>
+    </header>
+
+    <div class="main-wrapper">
+        <!-- 왼쪽 사이드바 (연수 시간표 및 현황) -->
+        <aside class="sidebar">
+            <h2>⏱️ 연수 타임라인 (60분)</h2>
+            <div class="timeline">
+                <div class="timeline-item active" id="time-1">
+                    <span class="timeline-time">00 ~ 10분</span>
+                    <span class="timeline-title">1. 바이브 코딩의 개념</span>
+                    <span class="timeline-desc">AI 플랫폼을 활용해 코딩 없이 만드는 개념 이해</span>
+                </div>
+                <div class="timeline-item" id="time-2">
+                    <span class="timeline-time">10 ~ 25분</span>
+                    <span class="timeline-title">2. 예시 사례 및 저장법</span>
+                    <span class="timeline-desc">HTML 파일 실행 원리 학습 및 메모장 다루기</span>
+                </div>
+                <div class="timeline-item" id="time-3">
+                    <span class="timeline-time">25 ~ 50분</span>
+                    <span class="timeline-title">3. 1:1 실습 및 버그 패치</span>
+                    <span class="timeline-desc">제미나이에 프롬프트를 넣고 나만의 MVP 만들기</span>
+                </div>
+                <div class="timeline-item" id="time-4">
+                    <span class="timeline-time">50 ~ 60분</span>
+                    <span class="timeline-title">4. 공유 및 질의응답</span>
+                    <span class="timeline-desc">수정 팁 나눔 및 현장 응용 방법 소개</span>
+                </div>
+            </div>
+            <div style="margin-top:auto; font-size:0.75rem; color:var(--text-secondary); text-align:center;">
+                * 방향키(←, →)로 슬라이드를 넘길 수 있습니다.
+            </div>
+        </aside>
+
+        <!-- 오른쪽 슬라이드 영역 -->
+        <main style="flex:1;">
+            <div class="slides-container">
+                <div class="slide-deck" id="slideDeck">
+                    
+                    <!-- 슬라이드 1: 표지 -->
+                    <div class="slide-item active" data-timeline="1">
+                        <span class="slide-tag">전문적 학습 공동체 연수</span>
+                        <h2 class="slide-title">AI 플랫폼 활용 바이브 코딩으로 만드는<br>나만의 학급운영 프로그램</h2>
+                        <div class="slide-body">
+                            <p><strong>"교직 경력은 많아도 코딩은 처음이신가요?"</strong></p>
+                            <p>개발 환경 설치도, 프로그래밍 언어 공부도 필요 없습니다.<br>오늘 연수에서는 교사의 생각(말)을 AI에게 건네어 실시간으로 작동하는 학급운영 도구를 만드는 <strong>바이브 코딩(Vibe Coding)</strong>을 배워봅니다.</p>
+                            <div class="slide-image-container">
+                                <img src="./images/vibe_concept.png" alt="바이브 코딩 개념" style="max-height: 250px;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 슬라이드 2: 개념 설명 -->
+                    <div class="slide-item" data-timeline="1">
+                        <span class="slide-tag">바이브 코딩 이해하기</span>
+                        <h2 class="slide-title">코딩 한 줄 몰라도 가능합니다!<br>바이브 코딩(Vibe Coding)이란?</h2>
+                        <div class="slide-body">
+                            <ul>
+                                <li><strong>개념</strong>: 복잡한 코드 작성 대신, AI에게 자연어로 원하는 기능과 형태를 요구해 프로그램을 만드는 개발 방식</li>
+                                <li><strong>교사의 역할</strong>: 코드를 짜는 '개발자'가 아닌, 아이디어를 구상하고 검수하는 <strong>'기획자 및 지시자'</strong>가 됩니다.</li>
+                                <li><strong>어떻게 작동하나요?</strong>: 
+                                    <br>1) <em>"자리 배치도를 만들어줘"</em> 라고 제미나이에 말하기
+                                    <br>2) 제미나이가 준 코드를 <strong>메모장에 복사-붙여넣기</strong>
+                                    <br>3) <code>seat.html</code>로 저장하고 더블클릭하면 끝!
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 슬라이드 3: 제미나이 무료버전 준비 -->
+                    <div class="slide-item" data-timeline="2">
+                        <span class="slide-tag">준비하기</span>
+                        <h2 class="slide-title">제미나이(Gemini) 무료 버전 준비 및 프롬프팅 요령</h2>
+                        <div class="slide-body">
+                            <p>가장 대중적이고 빠른 Google Gemini(무료 버전)를 사용합니다.</p>
+                            <ol>
+                                <li>브라우저에서 <a href="https://gemini.google.com" target="_blank" style="color:var(--color-accent-cyan); font-weight:bold;">gemini.google.com</a>에 접속 및 로그인합니다.</li>
+                                <li><strong>AI에게 지시할 때 꼭 들어가야 하는 4대 핵심 요소</strong>:
+                                    <br>- <strong>구조</strong>: "단 하나의 HTML 파일로 만들어줘" (매우 중요!)
+                                    <br>- <strong>기능</strong>: "학생 명단을 입력하고 룰렛을 돌려 무작위로 뽑는 기능"
+                                    <br>- <strong>스타일</strong>: "파스텔톤의 세련된 디자인, 보기 좋은 폰트 적용"
+                                    <br>- <strong>저장</strong>: "로컬저장소(localStorage)에 학생 명단이 유지되게 해줘"
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <!-- 슬라이드 4: 메모장 저장 요령 -->
+                    <div class="slide-item" data-timeline="2">
+                        <span class="slide-tag">코드 실행 방법</span>
+                        <h2 class="slide-title">컴퓨터에 프로그램 저장 및 실행하기</h2>
+                        <div class="slide-body">
+                            <p>AI가 준 코드는 다음과 같이 저장하여 실행합니다.</p>
+                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; align-items:center;">
+                                <div>
+                                    <ol>
+                                        <li>제미나이가 준 코드 상단의 <strong>[복사]</strong> 버튼을 누릅니다.</li>
+                                        <li>보조프로그램에서 <strong>[메모장(Notepad)]</strong>을 켭니다.</li>
+                                        <li>코드를 붙여넣고 <strong>[다른 이름으로 저장]</strong>을 누릅니다.</li>
+                                        <li><strong>[파일 형식]</strong>을 반드시 <strong>'모든 파일 (*.*)'</strong>로 설정합니다.</li>
+                                        <li>파일명 끝에 <strong><code>.html</code></strong>을 붙이고 인코딩을 <strong>'UTF-8'</strong>로 지정한 뒤 저장합니다.</li>
+                                    </ol>
+                                </div>
+                                <div class="slide-image-container">
+                                    <img src="./images/notepad_save_guide.png" alt="메모장 저장 가이드" style="max-height: 250px;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 슬라이드 5: 예제 1 - 자리배치 -->
+                    <div class="slide-item" data-timeline="3">
+                        <span class="slide-tag">실습 1단계</span>
+                        <h2 class="slide-title">실습 예제 ① : 드래그 앤 드롭 자리 배치도</h2>
+                        <div class="slide-body">
+                            <p><strong>선생님들이 매달 겪는 스트레스 1위, 자리 바꾸기!</strong></p>
+                            <ul>
+                                <li><strong>기능적 핵심</strong>: 가로/세로 좌석 수를 교실에 맞춰 조정, 학생 명단을 입력해 한 번에 셔플</li>
+                                <li><strong>바이브 강점</strong>: 마우스로 명단 카드를 <strong>드래그 앤 드롭(Drag & Drop)</strong>하여 앞뒤 자리를 직접 눈으로 보며 조정 가능</li>
+                                <li><strong>실습 목표</strong>: 상단 탭의 <a href="./workbench.html" style="color:var(--color-accent); font-weight:bold;">[실습 워크벤치]</a>에서 '자리 배치도' 프롬프트를 복사하여 제미나이에 붙여넣고 작동 버전을 만들어보세요!</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 슬라이드 6: 예제 2 - 룰렛 추첨 -->
+                    <div class="slide-item" data-timeline="3">
+                        <span class="slide-tag">실습 2단계</span>
+                        <h2 class="slide-title">실습 예제 ② : 모둠 구성 & 룰렛 발표자 추첨기</h2>
+                        <div class="slide-body">
+                            <p><strong>수업 몰입도를 올리는 게이미피케이션(Gamification) 도구!</strong></p>
+                            <ul>
+                                <li><strong>기능적 핵심</strong>: 4명씩 6개 모둠 등 원하는 비율로 모둠 자동 편성, 원형 룰렛이 돌며 효과음과 함께 당첨자를 선정</li>
+                                <li><strong>바이브 강점</strong>: 별도의 오디오 파일이나 라이브러리 없이 브라우저 내장 <strong>음성 합성(TTS)</strong>을 활용하여 당첨 학생 이름을 읽어주고 화면 가득 폭죽(Confetti)이 터지는 애니메이션 탑재</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 슬라이드 7: 문제 해결법 -->
+                    <div class="slide-item" data-timeline="3">
+                        <span class="slide-tag">문제 해결 (Vibe Loop)</span>
+                        <h2 class="slide-title">에러 발생 시 대처법: "AI와 대화로 해결하기"</h2>
+                        <div class="slide-body">
+                            <p>에러가 나거나 디자인이 맘에 안 들면 주저하지 말고 다시 채팅 창에 물어보세요.</p>
+                            <ul>
+                                <li><strong>한글이 깨질 때</strong>: <em>"한글 폰트가 정상적으로 표시되도록 UTF-8 인코딩 선언 태그를 넣어주고 폰트 패밀리를 깔끔하게 고쳐줘."</em></li>
+                                <li><strong>특정 기능이 멈췄을 때</strong>: <em>"룰렛 돌리기 버튼을 클릭해도 아무런 작동이 안 돼. 개발자 도구 에러 로그 없이 정상 작동하게 코드를 다시 짜줘."</em></li>
+                                <li><strong>디자인 변경을 원할 때</strong>: <em>"초등학생 교실에 어울리도록 파스텔톤의 노란색과 민트색 위주의 테마로 밝게 꾸며줘."</em></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 슬라이드 8: 연수 마무리 -->
+                    <div class="slide-item" data-timeline="4">
+                        <span class="slide-tag">연수 정리</span>
+                        <h2 class="slide-title">바이브 코딩으로 교사의 날개를 다세요!</h2>
+                        <div class="slide-body">
+                            <p>오늘 우리는 <strong>프로그래밍 기초 지식 없이</strong> 교실에 꼭 필요한 MVP 프로그램 3종을 구상하고 생성하는 실습을 진행했습니다.</p>
+                            <ul>
+                                <li><strong>앞으로의 과제</strong>: 1인 1역 현황판, 오늘 청소 담당 룰렛, 학급 칭찬 온도계 등 우리 반만의 색다른 프로그램을 직접 제작해 보세요.</li>
+                                <li><strong>가장 중요한 태도</strong>: 완벽한 코딩 지식보다 <strong>'내가 원하는 기능이 무엇인지 상세히 문장으로 정리하는 논리적 사고력'</strong>이 핵심입니다.</li>
+                            </ul>
+                            <p style="margin-top:20px; font-weight:bold; color:var(--color-accent-pink); text-align:center;">
+                                수고하셨습니다! 이제 상단 <a href="./workbench.html" style="color:var(--color-accent-pink);">[실습 워크벤치]</a> 탭을 눌러 실습을 직접 시작해 보시기 바랍니다.
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- 슬라이드 네비게이션 -->
+                <div class="slide-footer">
+                    <div class="slide-dots" id="slideDots"></div>
+                    <div class="slide-nav">
+                        <button class="slide-btn" id="btnPrevSlide" onclick="moveSlide(-1)">이전</button>
+                        <button class="slide-btn" id="btnNextSlide" onclick="moveSlide(1)">다음</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="./app.js"></script>
+</body>
+</html>

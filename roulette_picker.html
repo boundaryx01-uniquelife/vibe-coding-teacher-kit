@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>반짝반짝 모둠 구성 & 발표자 추첨기</title>
+    <style>
+        :root {
+            --primary: #ec4899;
+            --primary-hover: #db2777;
+            --secondary: #8b5cf6;
+            --secondary-hover: #7c3aed;
+            --background: #faf5ff;
+            --card-bg: #ffffff;
+            --text: #1e1b4b;
+            --text-muted: #4f46e5;
+            --border: #f3e8ff;
+            --shadow: 0 10px 15px -3px rgba(139, 92, 246, 0.1), 0 4px 6px -4px rgba(139, 92, 246, 0.1);
+            --radius: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        header {
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        h1 {
+            color: var(--secondary);
+            font-size: 2rem;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p {
+            color: #6b7280;
+            font-size: 0.95rem;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 25px;
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        .sidebar, .main-content {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #4b5563;
+        }
+
+        textarea {
+            width: 100%;
+            height: 180px;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.2s;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            font-weight: bold;
+            font-size: 1rem;
+            color: #9ca3af;
+            cursor: pointer;
+            position: relative;
+            transition: color 0.2s;
+        }
+
+        .tab-btn.active {
+            color: var(--secondary);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--secondary);
+            border-radius: 3px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* 룰렛 스타일 */
+        .roulette-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 0;
+            position: relative;
+        }
+
+        .roulette-wrapper {
+            position: relative;
+            width: 320px;
+            height: 320px;
+            margin-bottom: 25px;
+        }
+
+        #wheel {
+            border-radius: 50%;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .pointer {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 30px solid var(--primary);
+            z-index: 10;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px rgba(139, 92, 246, 0.2);
+        }
+
+        button:hover {
+            background-color: var(--secondary-hover);
+            transform: translateY(-1px);
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        .btn-pink {
+            background-color: var(--primary);
+            box-shadow: 0 4px 6px rgba(236, 72, 153, 0.2);
+        }
+
+        .btn-pink:hover {
+            background-color: var(--primary-hover);
+        }
+
+        /* 모둠 스타일 */
+        .group-config {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 20px;
+            background: var(--background);
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .group-config input {
+            width: 70px;
+            padding: 8px;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .group-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .group-card {
+            background: #faf5ff;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            transition: transform 0.2s;
+        }
+
+        .group-card:hover {
+            transform: scale(1.02);
+            border-color: #d8b4fe;
+        }
+
+        .group-card h3 {
+            color: var(--secondary);
+            font-size: 1.1rem;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .group-members {
+            list-style: none;
+            font-size: 0.95rem;
+        }
+
+        .group-members li {
+            padding: 6px 8px;
+            background: white;
+            margin-bottom: 5px;
+            border-radius: 6px;
+            border: 1px solid #f3f4f6;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* 모달 알림창 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--radius);
+            padding: 40px;
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3);
+            animation: popUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            border: 3px solid var(--primary);
+        }
+
+        @keyframes popUp {
+            0% { transform: scale(0.7); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .modal h2 {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            margin-bottom: 10px;
+        }
+
+        .winner-name {
+            font-size: 3rem;
+            font-weight: 955;
+            color: var(--primary);
+            margin: 20px 0;
+            letter-spacing: 2px;
+            animation: pulse 1s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); text-shadow: 0 0 10px rgba(236,72,153,0.3); }
+            100% { transform: scale(1.1); text-shadow: 0 0 25px rgba(236,72,153,0.6); }
+        }
+
+        .modal button {
+            margin-top: 15px;
+        }
+
+        /* 폭죽 캔버스 */
+        #confetti {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 101;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🎉 반짝반짝 모둠 구성 & 룰렛 추첨기</h1>
+        <p>명단을 입력하고 랜덤 모둠을 구성하거나, 룰렛을 돌려 발표자를 선정해 보세요!</p>
+    </header>
+
+    <div class="container">
+        <!-- 설정 영역 -->
+        <div class="sidebar">
+            <div class="form-group">
+                <label for="studentList">학생 명단 입력 (쉼표 또는 줄바꿈)</label>
+                <textarea id="studentList" placeholder="김철수&#10;이영희&#10;박민수&#10;..."></textarea>
+            </div>
+            <p style="font-size: 0.8rem; color:#6b7280; line-height:1.4;">
+                * 입력한 이름은 웹 브라우저에 자동 저장되어 다음에 다시 입력하지 않아도 됩니다.
+            </p>
+        </div>
+
+        <!-- 메인 인터랙티브 영역 -->
+        <div class="main-content">
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('picker')">🎯 룰렛 발표자 추첨</button>
+                <button class="tab-btn" onclick="switchTab('groups')">👥 랜덤 모둠 구성</button>
+            </div>
+
+            <!-- 1. 룰렛 추첨 탭 -->
+            <div id="tab-picker" class="tab-content active">
+                <div class="roulette-container">
+                    <div class="roulette-wrapper">
+                        <div class="pointer"></div>
+                        <canvas id="wheel" width="320" height="320"></canvas>
+                    </div>
+                    <button id="btnSpin" class="btn-pink" style="max-width: 250px;">🎲 룰렛 돌리기</button>
+                </div>
+            </div>
+
+            <!-- 2. 모둠 구성 탭 -->
+            <div id="tab-groups" class="tab-content">
+                <div class="group-config">
+                    <label style="margin-bottom:0; font-weight:bold;">만들고자 하는 모둠 수 :</label>
+                    <input type="number" id="groupCount" value="4" min="2" max="20">
+                    <span style="color: #6b7280; font-size: 0.9rem;">개 모둠</span>
+                    <button id="btnCreateGroups" style="margin-left:auto; width:auto; padding:8px 20px;">👥 모둠 생성하기</button>
+                </div>
+                <div id="groupGrid" class="group-grid">
+                    <!-- 구성된 모둠 카드가 노출됩니다 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 당첨 결과 모달 -->
+    <div id="winnerModal" class="modal">
+        <div class="modal-content">
+            <h2>🎉 오늘의 발표 주인공 🎉</h2>
+            <div id="winnerName" class="winner-name">홍길동</div>
+            <p style="color:#6b7280;">멋진 발표를 기대합니다!</p>
+            <button onclick="closeModal()">축하합니다! 👏</button>
+        </div>
+    </div>
+
+    <!-- 폭죽용 캔버스 -->
+    <canvas id="confetti"></canvas>
+
+    <script>
+        const STORAGE_KEY = 'vibe_picker_students';
+        const studentListText = document.getElementById('studentList');
+        const wheel = document.getElementById('wheel');
+        const ctx = wheel.getContext('2d');
+        const btnSpin = document.getElementById('btnSpin');
+        const winnerModal = document.getElementById('winnerModal');
+        const winnerNameDiv = document.getElementById('winnerName');
+        const groupCountInput = document.getElementById('groupCount');
+        const btnCreateGroups = document.getElementById('btnCreateGroups');
+        const groupGrid = document.getElementById('groupGrid');
+
+        let students = [];
+        
+        // 룰렛 관련 변수
+        let startAngle = 0;
+        let arc = 0;
+        let spinTimeout = null;
+        let spinAngleStart = 10;
+        let spinTime = 0;
+        let spinTimeTotal = 0;
+
+        // 컬러 팔레트 (룰렛 슬라이스용)
+        const colors = ["#f87171", "#fb923c", "#fbbf24", "#34d399", "#60a5fa", "#818cf8", "#a78bfa", "#f472b6"];
+
+        // 페이지 로드 시
+        window.addEventListener('load', () => {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                studentListText.value = saved;
+            } else {
+                studentListText.value = "강민준, 고은아, 김도현, 김민지, 김서연, 김우빈, 김지아, 김현우, 박서준, 박소율, 박예준, 박지민, 배수아, 서지훈, 신민서";
+            }
+            updateStudents();
+            drawWheel();
+        });
+
+        // 학생 명단 자동 저장 및 동기화
+        studentListText.addEventListener('input', () => {
+            localStorage.setItem(STORAGE_KEY, studentListText.value);
+            updateStudents();
+            drawWheel();
+        });
+
+        function updateStudents() {
+            students = studentListText.value.split(/[\n,]+/)
+                .map(name => name.trim())
+                .filter(name => name.length > 0);
+            arc = Math.PI / (students.length / 2);
+        }
+
+        // 탭 전환
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            if (tab === 'picker') {
+                document.querySelector('.tab-btn:nth-child(1)').classList.add('active');
+                document.getElementById('tab-picker').classList.add('active');
+                drawWheel();
+            } else {
+                document.querySelector('.tab-btn:nth-child(2)').classList.add('active');
+                document.getElementById('tab-groups').classList.add('active');
+            }
+        }
+
+        // 룰렛 그리기
+        function drawWheel() {
+            if (students.length === 0) {
+                ctx.clearRect(0, 0, 320, 320);
+                ctx.fillStyle = "#cbd5e1";
+                ctx.font = "bold 16px sans-serif";
+                ctx.textAlign = "center";
+                ctx.fillText("이름을 입력해 주세요", 160, 160);
+                return;
+            }
+
+            ctx.clearRect(0, 0, 320, 320);
+            const outsideRadius = 150;
+            const textRadius = 110;
+            const insideRadius = 40;
+
+            for(let i = 0; i < students.length; i++) {
+                const angle = startAngle + i * arc;
+                ctx.fillStyle = colors[i % colors.length];
+
+                ctx.beginPath();
+                ctx.arc(160, 160, outsideRadius, angle, angle + arc, false);
+                ctx.arc(160, 160, insideRadius, angle + arc, angle, true);
+                ctx.stroke();
+                ctx.fill();
+
+                ctx.save();
+                ctx.fillStyle = "white";
+                ctx.font = "bold 13px sans-serif";
+                ctx.shadowColor = "rgba(0,0,0,0.3)";
+                ctx.shadowBlur = 4;
+                ctx.translate(160 + Math.cos(angle + arc / 2) * textRadius, 
+                              160 + Math.sin(angle + arc / 2) * textRadius);
+                ctx.rotate(angle + arc / 2 + Math.PI / 2);
+                const text = students[i];
+                ctx.fillText(text, -ctx.measureText(text).width / 2, 0);
+                ctx.restore();
+            }
+
+            // 가운데 로고 원 그리기
+            ctx.fillStyle = "white";
+            ctx.beginPath();
+            ctx.arc(160, 160, 35, 0, Math.PI * 2, false);
+            ctx.fill();
+            ctx.strokeStyle = "#8b5cf6";
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            ctx.fillStyle = "#8b5cf6";
+            ctx.font = "bold 12px sans-serif";
+            ctx.textAlign = "center";
+            ctx.fillText("PICK", 160, 164);
+        }
+
+        // 룰렛 회전
+        btnSpin.addEventListener('click', () => {
+            if (students.length === 0) return;
+            spinAngleStart = Math.random() * 10 + 10;
+            spinTime = 0;
+            spinTimeTotal = Math.random() * 3000 + 4000;
+            rotateWheel();
+        });
+
+        function rotateWheel() {
+            spinTime += 30;
+            if(spinTime >= spinTimeTotal) {
+                stopRotateWheel();
+                return;
+            }
+            const spinAngle = spinAngleStart - easeOut(spinTime, 0, spinAngleStart, spinTimeTotal);
+            startAngle += (spinAngle * Math.PI / 180);
+            drawWheel();
+            spinTimeout = setTimeout(rotateWheel, 30);
+        }
+
+        function stopRotateWheel() {
+            clearTimeout(spinTimeout);
+            const degrees = startAngle * 180 / Math.PI + 90;
+            const arcd = arc * 180 / Math.PI;
+            const index = Math.floor((360 - (degrees % 360)) / arcd);
+            ctx.save();
+            
+            const winner = students[index];
+            winnerNameDiv.textContent = winner;
+            winnerModal.style.display = 'flex';
+
+            // 음성 합성(TTS)으로 이름 읽어주기
+            try {
+                if ('speechSynthesis' in window) {
+                    const utterance = new SpeechSynthesisUtterance(`오늘의 주인공은 ${winner} 학생입니다!`);
+                    utterance.lang = 'ko-KR';
+                    utterance.rate = 1.0;
+                    window.speechSynthesis.speak(utterance);
+                }
+            } catch(e) {}
+
+            startConfetti();
+        }
+
+        function easeOut(t, b, c, d) {
+            const ts = (t /= d) * t;
+            const tc = ts * t;
+            return b + c * (tc + -3 * ts + 3 * t);
+        }
+
+        function closeModal() {
+            winnerModal.style.display = 'none';
+            stopConfetti();
+        }
+
+        // 랜덤 모둠 구성 로직
+        btnCreateGroups.addEventListener('click', () => {
+            if (students.length === 0) {
+                alert("학생 명단을 먼저 입력해 주세요!");
+                return;
+            }
+
+            const numGroups = parseInt(groupCountInput.value) || 4;
+            if (numGroups <= 1) {
+                alert("모둠 수는 최소 2개 이상이어야 합니다.");
+                return;
+            }
+
+            // 학생 명단 복제 및 셔플
+            const list = [...students];
+            for (let i = list.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [list[i], list[j]] = [list[j], list[i]];
+            }
+
+            // 모둠별 배열 초기화
+            const groups = Array.from({ length: numGroups }, () => []);
+
+            // 순차 분배
+            list.forEach((student, index) => {
+                groups[index % numGroups].push(student);
+            });
+
+            // 렌더링
+            groupGrid.innerHTML = "";
+            groups.forEach((group, index) => {
+                const card = document.createElement('div');
+                card.classList.add('group-card');
+                
+                const title = document.createElement('h3');
+                title.innerHTML = `<span>👥 모둠 ${index + 1}</span> <span style="font-size:0.8rem; color:#9ca3af;">${group.length}명</span>`;
+                card.appendChild(title);
+
+                const memberList = document.createElement('ul');
+                memberList.classList.add('group-members');
+                group.forEach((member, mIdx) => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<span>${member}</span> <span style="color:#e2e8f0; font-size:0.75rem;">${mIdx + 1}</span>`;
+                    memberList.appendChild(li);
+                });
+                
+                card.appendChild(memberList);
+                groupGrid.appendChild(card);
+            });
+        });
+
+        // 폭죽(Confetti) 효과 스크립트 (완전 로컬 캔버스 구현)
+        const confettiCanvas = document.getElementById('confetti');
+        const cCtx = confettiCanvas.getContext('2d');
+        let confettiActive = false;
+        let particles = [];
+
+        function resizeConfetti() {
+            confettiCanvas.width = window.innerWidth;
+            confettiCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeConfetti);
+
+        class ConfettiParticle {
+            constructor() {
+                this.x = Math.random() * confettiCanvas.width;
+                this.y = Math.random() * confettiCanvas.height - confettiCanvas.height;
+                this.r = Math.random() * 6 + 4;
+                this.d = Math.random() * confettiCanvas.height;
+                this.color = `hsl(${Math.random() * 360}, 100%, 60%)`;
+                this.tilt = Math.random() * 10 - 5;
+                this.tiltAngleIncremental = Math.random() * 0.07 + 0.02;
+                this.tiltAngle = 0;
+            }
+            update() {
+                this.tiltAngle += this.tiltAngleIncremental;
+                this.y += (Math.cos(this.tiltAngle) + 3 + this.r / 2) / 2;
+                this.x += Math.sin(this.tiltAngle);
+                this.tilt = Math.sin(this.tiltAngle - this.r / 2) * 5;
+                return this.y > confettiCanvas.height;
+            }
+            draw() {
+                cCtx.beginPath();
+                cCtx.lineWidth = this.r;
+                cCtx.strokeStyle = this.color;
+                cCtx.moveTo(this.x + this.tilt + this.r / 2, this.y);
+                cCtx.lineTo(this.x + this.tilt, this.y + this.tilt + this.r / 2);
+                cCtx.stroke();
+            }
+        }
+
+        function startConfetti() {
+            resizeConfetti();
+            confettiCanvas.style.display = 'block';
+            confettiActive = true;
+            particles = Array.from({ length: 150 }, () => new ConfettiParticle());
+            animateConfetti();
+        }
+
+        function stopConfetti() {
+            confettiActive = false;
+            confettiCanvas.style.display = 'none';
+        }
+
+        function animateConfetti() {
+            if (!confettiActive) return;
+            cCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            particles.forEach((p, idx) => {
+                p.draw();
+                const isOut = p.update();
+                if (isOut) {
+                    particles[idx] = new ConfettiParticle();
+                    particles[idx].y = -10;
+                }
+            });
+            requestAnimationFrame(animateConfetti);
+        }
+    </script>
+</body>
+</html>
