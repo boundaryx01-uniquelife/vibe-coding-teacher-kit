@@ -19,6 +19,7 @@
     margin: 0;
     padding: 0;
     font-family: var(--font-sans);
+    word-break: keep-all;
 }
 
 body {
@@ -462,6 +463,8 @@ nav {
     gap: 8px;
     transition: all 0.2s;
     box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+    white-space: nowrap;
+    word-break: keep-all;
 }
 
 .btn-prompt {
