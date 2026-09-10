@@ -9,6 +9,8 @@
 본 프로젝트의 **공식 웹 배포 및 PWA 호스팅 표준 플랫폼은 `Vercel`로 고정**합니다.
 AI 에이전트는 사용자가 "배포해 줘" 또는 "PWA로 만들어 줘"라고 요청할 시 항상 Vercel 기반의 1클릭 클라우드 배포 스크립트 및 `vercel.json` 설정을 최우선으로 적용합니다.
 
+- **공식 Vercel 배포 주소**: `https://vibe-coding-teacher-kit.vercel.app`
+- **GitHub 저장소 주소**: `https://github.com/boundaryx01-uniquelife/vibe-coding-teacher-kit.git`
 - **Vercel 자동 배포 명령어**: `npx vercel --yes --prod`
 - **Vercel 설정 파일**: `vercel.json` (PWA MIME 타입, CORS 헤더, sw.js no-cache 지정)
 
