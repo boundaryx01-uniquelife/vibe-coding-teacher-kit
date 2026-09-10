@@ -950,6 +950,7 @@ const CLASS_BOARD_CODE = `<!DOCTYPE html>
 const TOOLS_METADATA = {
     seat: {
         title: "자리 배치도 생성기 미리보기",
+        url: "./seat_arranger.html",
         desc: "교차 배치, 드래그앤드롭 자리 교환이 가능한 학급 자리 배치 프로그램을 생성합니다.",
         prompt: `초등학교 학급운영을 위한 '학급 자리 배치도 생성 프로그램'을 만들고 싶어. HTML, CSS, JavaScript를 단 하나의 파일로 결합해서 완성도 높은 웹 페이지를 만들어줘. 코딩 초보자도 더블클릭하면 실행할 수 있어야 해. 조건은 다음과 같아:
 
@@ -971,6 +972,7 @@ const TOOLS_METADATA = {
     },
     roulette: {
         title: "모둠 구성 & 룰렛 발표자 추첨기 미리보기",
+        url: "./roulette_picker.html",
         desc: "원형 룰렛 애니메이션, TTS 이름 발표, 캔버스 폭죽 효과음이 어우러진 추첨기입니다.",
         prompt: `수업 시간에 발표자를 추첨하고 모둠을 구성할 수 있는 '모둠 구성 및 룰렛 발표자 추첨기' 프로그램을 만들고 싶어. HTML, CSS, JavaScript를 단 하나의 독립된 파일로 짜줘. 아래 조건을 만족해야 해:
 
@@ -993,6 +995,7 @@ const TOOLS_METADATA = {
     },
     board: {
         title: "오늘의 학급 안내판 & 타이머 미리보기",
+        url: "./class_board.html",
         desc: "실시간 시계, 타이머, 알림장, 시간표, 급식 메뉴 등을 종합 대시보드로 띄웁니다.",
         prompt: `교실 TV 화면에 띄워 아침 조회나 자습 시간에 활용할 수 있는 '오늘의 학급 안내판 및 타이머 대시보드' 프로그램을 만들고 싶어. HTML, CSS, JavaScript를 단 하나의 파일로 코딩해줘. 아래 요소를 포함해야 해:
 
@@ -1046,6 +1049,7 @@ const btnNextSlide = document.getElementById('btnNextSlide');
 
 // 슬라이드 네비게이션 도트 생성
 function initSlideDots() {
+    if (!slideDotsContainer) return;
     slideDotsContainer.innerHTML = "";
     for (let i = 0; i < totalSlides; i++) {
         const dot = document.createElement('div');
@@ -1074,13 +1078,15 @@ function updateSlideView() {
     });
 
     // 이전/다음 버튼 비활성화 제어
-    btnPrevSlide.disabled = (currentSlideIndex === 0);
-    btnNextSlide.disabled = (currentSlideIndex === totalSlides - 1);
+    if (btnPrevSlide) btnPrevSlide.disabled = (currentSlideIndex === 0);
+    if (btnNextSlide) btnNextSlide.disabled = (currentSlideIndex === totalSlides - 1);
 
     // 사이드바 타임라인 단계 강조 동기화
     const activeSlide = slides[currentSlideIndex];
-    const timelineStep = activeSlide.dataset.timeline;
-    highlightTimelineStep(timelineStep);
+    if (activeSlide) {
+        const timelineStep = activeSlide.dataset.timeline;
+        highlightTimelineStep(timelineStep);
+    }
 }
 
 function moveSlide(direction) {
@@ -1099,7 +1105,7 @@ function goToSlide(index) {
 document.addEventListener('keydown', (e) => {
     // 슬라이드 뷰가 활성화되어 있는 동안만 작동
     const slidesView = document.getElementById('view-slides');
-    if (slidesView.classList.contains('active')) {
+    if (slidesView && slidesView.classList.contains('active')) {
         if (e.key === 'ArrowRight') {
             moveSlide(1);
         } else if (e.key === 'ArrowLeft') {
@@ -1132,19 +1138,28 @@ function selectTool(toolKey) {
     if (toolKey === 'roulette') btnIndex = 1;
     if (toolKey === 'board') btnIndex = 2;
     
-    document.querySelectorAll('.tool-selector-btn')[btnIndex].classList.add('active');
+    const selectorBtns = document.querySelectorAll('.tool-selector-btn');
+    if (selectorBtns[btnIndex]) {
+        selectorBtns[btnIndex].classList.add('active');
+    }
 
     const metadata = TOOLS_METADATA[toolKey];
+    if (!metadata) return;
     
     // 타이틀 및 정보 업데이트
-    document.getElementById('sandboxTitle').textContent = metadata.title;
-    document.getElementById('toolTipContent').innerHTML = metadata.tips;
+    const sandboxTitle = document.getElementById('sandboxTitle');
+    if (sandboxTitle) sandboxTitle.textContent = metadata.title;
 
-    // 샌드박스 아이프레임 로드
+    const toolTipContent = document.getElementById('toolTipContent');
+    if (toolTipContent) toolTipContent.innerHTML = metadata.tips;
+
+    // 샌드박스 아이프레임 로드 (URL 기반 직접 로드로 하얀 화면 방지)
     const iframe = document.getElementById('sandboxIframe');
     if (iframe) {
-        iframe.srcdoc = metadata.code;
+        iframe.removeAttribute('srcdoc');
+        iframe.src = metadata.url;
     }
+
 
     // 프롬프트 실시간 미리보기 및 하단 타이틀 업데이트
     const promptPreviewTitle = document.getElementById('promptPreviewTitle');
